@@ -30,21 +30,40 @@ echo "Installing Alacritty config..."
 cp alacritty/alacritty.toml ~/.config/alacritty/
 
 echo "Installing Neovim config..."
-cp -r nvim/* ~/.config/nvim/ 2>/dev/null || echo "No nvim config to install"
+mkdir -p ~/.config/nvim
+[ -f nvim/init.lua ] && cp nvim/init.lua ~/.config/nvim/
+[ -f nvim/lazy-lock.json ] && cp nvim/lazy-lock.json ~/.config/nvim/
+[ -d nvim/lua ] && cp -r nvim/lua ~/.config/nvim/
 
 echo "Installing scripts..."
-cp scripts/* ~/.local/bin/
-chmod +x ~/.local/bin/*
+[ -d scripts ] && cp scripts/* ~/.local/bin/ && chmod +x ~/.local/bin/*
 
 echo "Installing theme configs..."
-cp themes/mimeapps.list ~/.config/
-cp themes/gtk3-settings.ini ~/.config/gtk-3.0/settings.ini
-cp themes/gtk4-settings.ini ~/.config/gtk-4.0/settings.ini
+[ -f themes/mimeapps.list ] && cp themes/mimeapps.list ~/.config/
+[ -f themes/gtk3-settings.ini ] && cp themes/gtk3-settings.ini ~/.config/gtk-3.0/settings.ini
+[ -f themes/gtk4-settings.ini ] && cp themes/gtk4-settings.ini ~/.config/gtk-4.0/settings.ini
 
 echo "Setting GTK theme..."
 gsettings set org.gnome.desktop.interface gtk-theme 'catppuccin-mocha-blue-standard+default'
 gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark'
 gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
 
+echo "Installing SDDM astronaut theme..."
+# Install gum dependency
+sudo pacman -S --needed gum
+
+# Install astronaut theme
+if [ ! -d /usr/share/sddm/themes/sddm-astronaut-theme ]; then
+    echo "Downloading astronaut theme..."
+    git clone https://github.com/Keyitdev/sddm-astronaut-theme.git /tmp/sddm-astronaut-theme
+    sudo cp -r /tmp/sddm-astronaut-theme /usr/share/sddm/themes/sddm-astronaut-theme
+    sudo rm -rf /tmp/sddm-astronaut-theme
+fi
+
+# Install SDDM config
+echo "Configuring SDDM..."
+[ -f sddm/sddm.conf ] && sudo cp sddm/sddm.conf /etc/sddm.conf
+
 echo "Installation complete!"
 echo "You may need to reload Hyprland: hyprctl reload"
+echo "Log out to see the new SDDM theme"

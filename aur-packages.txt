@@ -4,5 +4,6 @@ kvantum-theme-catppuccin-git
 papirus-folders
 qt5-styleplugins
 qt5-styleplugins-debug
+sddm-catppuccin-git
 yay
 yay-debug

@@ -23,6 +23,7 @@ gedit
 git
 grim
 grub
+gum
 htop
 hyprland
 iwd
@@ -53,12 +54,16 @@ polkit-kde-agent
 qt5-styleplugins
 qt5-wayland
 qt5ct
+qt6-multimedia-ffmpeg
+qt6-virtualkeyboard
 qt6-wayland
 qt6ct
 sddm
+sddm-catppuccin-git
 slurp
 smartmontools
 snapper
+telegram-desktop
 thunar
 ttf-fira-code
 ttf-firacode-nerd
