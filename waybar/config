@@ -1,0 +1,168 @@
+{
+  "layer": "top",
+  "position": "top",
+  "height": 40,
+  "exclusive": true,
+  "passthrough": false,
+  "gtk-layer-shell": true,
+  
+  "modules-left": [
+    "custom/archicon",
+    "clock",
+    "cpu",
+    "memory",
+    "disk",
+    "temperature"
+  ],
+  "modules-center": [
+    "hyprland/workspaces"
+  ],
+  "modules-right": [
+    "wlr/taskbar",
+    "idle_inhibitor", 
+    "pulseaudio",
+    "network",
+    "bluetooth",
+    "hyprland/language",
+    "custom/power"
+  ],
+
+  "custom/archicon": {
+    "format": "",
+    "on-click": "wofi --show drun",
+    "tooltip": false
+  },
+
+  "clock": {
+    "timezone": "Europe/Athens",
+    "format": "{:%H:%M  %d/%m}",
+    "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+    "calendar": {
+      "mode": "month"
+    }
+  },
+
+  "cpu": {
+    "interval": 2,
+    "format": "{usage}% ",
+    "tooltip": true,
+    "tooltip-format": "CPU Usage: {usage}%\nCores: {cores}",
+    "max-length": 10
+  },
+
+  "memory": {
+    "interval": 2,
+    "format": "{percentage}% 󰍛",
+    "tooltip": true,
+    "tooltip-format": "RAM: {used:0.1f}G / {total:0.1f}G ({percentage}%)",
+    "max-length": 10
+  },
+
+  "disk": {
+    "interval": 30,
+    "format": "{percentage_free}% ",
+    "path": "/",
+    "tooltip": true,
+    "tooltip-format": "Free space: {free} / {total} ({percentage_free}%)"
+  },
+
+  "temperature": {
+    "interval": 2,
+    "thermal-zone": 0,
+    "format": "{temperatureC}°C {icon}",
+    "tooltip": true,
+    "tooltip-format": "Temperature: {temperatureC}°C\nCritical if > 80°C",
+    "format-icons": [""]
+  },
+
+  "hyprland/workspaces": {
+    "format": "{icon}",
+    "format-icons": {
+      "default": "",
+      "active": ""
+    },
+    "persistent-workspaces": {
+      "*": 5
+    },
+    "disable-scroll": true,
+    "all-outputs": true,
+    "show-special": true
+  },
+
+  "wlr/taskbar": {
+    "format": "{icon}",
+    "all-outputs": true,
+    "active-first": true,
+    "tooltip-format": "{name}",
+    "on-click": "activate",
+    "on-click-middle": "close",
+    "ignore-list": ["rofi"]
+  },
+
+  "idle_inhibitor": {
+    "format": "{icon}",
+    "format-icons": {
+      "activated": "",
+      "deactivated": ""
+    }
+  },
+
+  "pulseaudio": {
+    "format": "{volume}% {icon}",
+    "format-bluetooth": "{volume}% {icon}",
+    "format-bluetooth-muted": " {icon}",
+    "format-muted": " Muted",
+    "format-source": "{volume}% ",
+    "format-source-muted": "",
+    "format-icons": {
+      "headphone": "",
+      "hands-free": "",
+      "headset": "",
+      "phone": "",
+      "portable": "",
+      "car": "",
+      "default": ["", "", ""]
+    },
+    "on-click": "pavucontrol",
+    "on-click-right": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
+  },
+
+  "network": {
+    "interval": 5,
+    "format-wifi": "{signalStrength}% ",
+    "format-ethernet": " Connected",
+    "format-linked": " {ifname} (No IP)",
+    "format-disconnected": " Disconnected",
+    "tooltip-format": "{ifname} via {gwaddr}",
+    "tooltip-format-wifi": "SSID: {essid}\nSignal: {signalStrength}%\nIP: {ipaddr}",
+    "tooltip-format-ethernet": "Interface: {ifname}\nIP: {ipaddr}/{cidr}",
+    "on-click": "nm-connection-editor",
+    "on-click-right": "nmcli device wifi rescan"
+  },
+
+  "bluetooth": {
+    "format": " {status}",
+    "format-disabled": "",
+    "format-off": "",
+    "format-on": "",
+    "format-connected": " {num_connections}",
+    "tooltip-format": "{controller_alias}\t{controller_address}\n\n{num_connections} connected",
+    "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{num_connections} connected\n\n{device_enumerate}",
+    "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
+    "on-click": "blueman-manager",
+    "on-click-right": "bluetoothctl power toggle"
+  },
+
+  "hyprland/language": {
+    "format": "{}",
+    "format-en": "EN",
+    "format-gr": "GR", 
+    "on-click": "hyprctl switchxkblayout at-translated-set-2-keyboard next"
+  },
+
+  "custom/power": {
+    "format": "",
+    "tooltip": "Power Options",
+    "on-click": "~/.local/bin/power-menu.sh"
+  }
+}

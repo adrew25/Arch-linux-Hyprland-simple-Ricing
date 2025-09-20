@@ -1,0 +1,54 @@
+[Default Applications]
+# Web
+text/html=firefox.desktop
+x-scheme-handler/http=firefox.desktop
+x-scheme-handler/https=firefox.desktop
+
+# PDF
+application/pdf=evince.desktop
+
+# Images
+image/jpeg=org.gnome.eog.desktop
+image/png=org.gnome.eog.desktop
+image/gif=org.gnome.eog.desktop
+image/bmp=eog.desktop
+image/svg+xml=eog.desktop
+image/webp=eog.desktop
+
+# Text files
+text/plain=org.gnome.gedit.desktop
+text/x-readme=gedit.desktop
+application/x-shellscript=gedit.desktop
+
+# Documents
+application/vnd.openxmlformats-officedocument.wordprocessingml.document=libreoffice-writer.desktop
+application/vnd.oasis.opendocument.text=libreoffice-writer.desktop
+application/msword=libreoffice-writer.desktop
+
+# Spreadsheets
+application/vnd.openxmlformats-officedocument.spreadsheetml.sheet=libreoffice-calc.desktop
+application/vnd.oasis.opendocument.spreadsheet=libreoffice-calc.desktop
+
+# Video
+video/mp4=vlc.desktop
+video/x-msvideo=vlc.desktop
+video/quicktime=vlc.desktop
+video/x-matroska=vlc.desktop
+video/webm=vlc.desktop
+
+# Audio
+audio/mpeg=vlc.desktop
+audio/mp4=vlc.desktop
+audio/x-wav=vlc.desktop
+audio/ogg=vlc.desktop
+
+# Archives
+application/zip=file-roller.desktop
+application/x-tar=file-roller.desktop
+application/x-rar=file-roller.desktop
+
+[Added Associations]
+text/plain=gedit.desktop;
+image/jpeg=eog.desktop;
+image/png=eog.desktop;
+application/pdf=evince.desktop;

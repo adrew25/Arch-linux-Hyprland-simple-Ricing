@@ -1,0 +1,221 @@
+/* -- Catppuccin Mocha Theme -- */
+* {
+  border: none;
+  font-family: "JetbrainsMono Nerd Font";
+  font-size: 15px;
+  min-height: 10px;
+}
+
+window#waybar {
+  background: rgba(30, 30, 46, 0.9);
+  border-bottom: 1px solid rgba(137, 180, 250, 0.3);
+}
+
+window#waybar.hidden {
+  opacity: 0.2;
+}
+
+#custom-archicon,
+#clock,
+#cpu,
+#memory,
+#disk,
+#temperature,
+#idle_inhibitor,
+#pulseaudio,
+#network,
+#bluetooth,
+#language,
+#custom-power {
+  color: #cdd6f4;
+  margin-top: 6px;
+  margin-bottom: 6px;
+  padding-left: 10px;
+  padding-right: 10px;
+  border: 1px solid transparent;
+}
+
+#custom-archicon,
+#cpu,
+#idle_inhibitor {
+  margin-left: 5px;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+#clock,
+#temperature,
+#language,
+#custom-power {
+  margin-right: 5px;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+/* Modules left */
+#custom-archicon {
+  font-size: 20px;
+  color: #89b4fa;
+  background: #181825;
+  border: 1px solid rgba(137, 180, 250, 0.3);
+  padding-right: 17px;
+}
+
+#clock {
+  background: #313244;
+  color: #89b4fa;
+  border: 1px solid rgba(137, 180, 250, 0.3);
+}
+
+#cpu {
+  background: #313244;
+  color: #cba6f7;
+  border: 1px solid rgba(203, 166, 247, 0.3);
+}
+
+#memory {
+  background: #313244;
+  color: #f5c2e7;
+  border: 1px solid rgba(245, 194, 231, 0.3);
+}
+
+#disk {
+  background: #313244;
+  color: #a6e3a1;
+  border: 1px solid rgba(166, 227, 161, 0.3);
+}
+
+#temperature {
+  background: #313244;
+  color: #fab387;
+  border: 1px solid rgba(250, 179, 135, 0.3);
+}
+
+/* Workspaces */
+#workspaces {
+  background: rgba(24, 24, 37, 0.8);
+  border: 1px solid rgba(137, 180, 250, 0.2);
+  border-radius: 10px;
+  margin: 6px 5px;
+  padding: 0px 6px;
+}
+
+#workspaces button {
+  color: #6c7086;
+  background: transparent;
+  padding: 4px 4px;
+  border-radius: 6px;
+  margin: 0 2px;
+}
+
+#workspaces button.occupied {
+  color: #a6e3a1;
+  background: rgba(166, 227, 161, 0.1);
+}
+
+#workspaces button.active {
+  color: #89b4fa;
+  background: rgba(137, 180, 250, 0.2);
+  border: 1px solid rgba(137, 180, 250, 0.4);
+}
+
+#workspaces button:hover {
+  color: #cba6f7;
+  background: rgba(203, 166, 247, 0.1);
+}
+
+/* Right modules */
+#taskbar {
+  background: rgba(24, 24, 37, 0.8);
+  border: 1px solid rgba(137, 180, 250, 0.2);
+  border-radius: 10px;
+  padding: 0px 5px;
+  margin: 6px 5px;
+}
+
+#taskbar button {
+  padding: 0px 5px;
+  margin: 0px 3px;
+  border-radius: 6px;
+  color: #89b4fa;
+}
+
+#taskbar button.active {
+  background: rgba(137, 180, 250, 0.2);
+  border: 1px solid rgba(137, 180, 250, 0.3);
+}
+
+#taskbar button:hover {
+  background: rgba(203, 166, 247, 0.1);
+}
+
+#idle_inhibitor {
+  background: #313244;
+  color: #a6e3a1;
+  border: 1px solid rgba(166, 227, 161, 0.3);
+  padding-right: 15px;
+}
+
+#pulseaudio {
+  background: #313244;
+  color: #fab387;
+  border: 1px solid rgba(250, 179, 135, 0.3);
+}
+
+#pulseaudio.muted {
+  background: #313244;
+  color: #f38ba8;
+  border: 1px solid rgba(243, 139, 168, 0.3);
+}
+
+#network {
+  background: #313244;
+  color: #89dceb;
+  border: 1px solid rgba(137, 220, 235, 0.3);
+  padding-right: 13px;
+}
+
+#network.disconnected {
+  background: #313244;
+  color: #f38ba8;
+  border: 1px solid rgba(243, 139, 168, 0.3);
+}
+
+#bluetooth {
+  background: #313244;
+  color: #b4befe;
+  border: 1px solid rgba(180, 190, 254, 0.3);
+}
+
+#bluetooth.disconnected {
+  background: #313244;
+  color: #6c7086;
+  border: 1px solid rgba(108, 112, 134, 0.3);
+}
+
+#bluetooth.off {
+  background: #313244;
+  color: #f38ba8;
+  border: 1px solid rgba(243, 139, 168, 0.3);
+}
+
+#language {
+  background: #313244;
+  color: #a6e3a1;
+  border: 1px solid rgba(166, 227, 161, 0.3);
+  padding-right: 15px;
+}
+
+#custom-power {
+  background: #313244;
+  color: #f5c2e7;
+  border: 1px solid rgba(245, 194, 231, 0.3);
+  font-size: 16px;
+}
+
+tooltip {
+  background: #181825;
+  color: #cdd6f4;
+  border: 1px solid rgba(137, 180, 250, 0.3);
+  border-radius: 8px;
+}
