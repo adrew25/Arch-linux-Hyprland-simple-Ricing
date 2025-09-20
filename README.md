@@ -91,7 +91,8 @@ cat > ~/dotfiles/update.sh << 'EOF'
     echo "Dotfiles updated! Don't forget to commit and push changes."
     EOF
 
+```
+```bash
     chmod +x ~/dotfiles/update.sh
 ```
-
 
