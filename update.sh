@@ -11,12 +11,32 @@ mkdir -p {hypr,waybar,ghostty,nvim,scripts,themes,screenshots}
 
 # Hyprland
 echo "  → Hyprland config"
-cp ~/.config/hypr/hyprland.conf hypr/
+# The live Lua config may already link into this repository.
+for config in hyprland.lua hyprland.conf; do
+    src="$HOME/.config/hypr/$config"
+    dst="hypr/$config"
+    if [ -f "$src" ] && ! [ "$src" -ef "$dst" ]; then
+        cp "$src" "$dst"
+    fi
+done
 
-# Waybar (dark glass style)
+# App launcher (skip files already linked into dotfiles).
+mkdir -p rofi
+for name in config.rasi apps.rasi; do
+    src="$HOME/.config/rofi/$name"
+    dst="rofi/$name"
+    if [ -f "$src" ] && ! [ "$src" -ef "$dst" ]; then cp "$src" "$dst"; fi
+done
+cp ~/.local/bin/app-launcher.sh scripts/ 2>/dev/null || true
+cp ~/.local/bin/reload-desktop.sh scripts/ 2>/dev/null || true
+
+# Waybar (minimal style)
 echo "  → Waybar config & style"
-cp ~/.config/waybar/config waybar/
-cp ~/.config/waybar/style.css waybar/
+for name in config style.css colors.css; do
+    src="$HOME/.config/waybar/$name"
+    dst="waybar/$name"
+    if [ -f "$src" ] && ! [ "$src" -ef "$dst" ]; then cp "$src" "$dst"; fi
+done
 
 # Ghostty (terminal)
 echo "  → Ghostty config"
@@ -45,6 +65,18 @@ cp ~/.local/bin/power-menu.sh scripts/ 2>/dev/null || echo "    No power-menu.sh
 cp ~/.local/bin/wallpaper-switcher.sh scripts/ 2>/dev/null || echo "    No wallpaper-switcher.sh found"
 cp ~/.local/bin/restore-wallpaper.sh scripts/ 2>/dev/null || echo "    No restore-wallpaper.sh found"
 cp ~/.local/bin/random-wallpaper.sh scripts/ 2>/dev/null || echo "    No random-wallpaper.sh found"
+
+# Preserve selected and imported desktop palettes for future restoration.
+mkdir -p themes/omarchy-custom
+if [ -d ~/.config/desktop-theme/custom ]; then
+    cp ~/.config/desktop-theme/custom/*.json themes/omarchy-custom/ 2>/dev/null || true
+fi
+if [ -f ~/.config/desktop-theme/current.json ]; then
+    /usr/bin/python3 -c 'import json, pathlib; p = pathlib.Path.home() / ".config/desktop-theme/current.json"; print(json.dumps({"name": json.loads(p.read_text())["name"]}, indent=2))' > themes/desktop-current.json
+fi
+for name in desktop-theme.py desktop-bar.sh theme-selector.sh theme-switcher.sh; do
+    if [ -f "$HOME/.local/bin/$name" ]; then cp "$HOME/.local/bin/$name" scripts/; fi
+done
 
 # Theme configs
 echo "  → Theme configs"

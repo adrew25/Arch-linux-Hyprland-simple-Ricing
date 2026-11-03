@@ -56,7 +56,6 @@ linux-firmware
 linux-headers
 lsd
 lshw
-mattermost-desktop
 matugen-bin
 nano
 neovim
@@ -101,7 +100,7 @@ snapper
 socat
 solaar
 swaybg
-swww
+awww
 telegram-desktop
 thunar
 tmux

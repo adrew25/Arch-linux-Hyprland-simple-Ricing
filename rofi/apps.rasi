@@ -1,0 +1,53 @@
+/* A quiet app palette: charcoal, warm text, one blue accent. */
+@import "~/.config/desktop-theme/colors.rasi"
+* {
+    background-color: transparent;
+    text-color: @fg;
+    border-color: @selection;
+    spacing: 0;
+}
+window {
+    location: center;
+    anchor: center;
+    width: 700px;
+    border: 1px;
+    border-radius: 14px;
+    background-color: @bg;
+}
+mainbox { padding: 18px; spacing: 14px; children: [ inputbar, listview, textbox ]; }
+inputbar {
+    padding: 12px 14px;
+    spacing: 12px;
+    border-radius: 8px;
+    background-color: @panel;
+    children: [ prompt, entry ];
+}
+prompt { text-color: @accent; }
+entry { placeholder: "Search your apps…"; placeholder-color: @muted; }
+listview {
+    columns: 2;
+    lines: 5;
+    fixed-height: true;
+    fixed-columns: true;
+    dynamic: false;
+    spacing: 6px;
+    scrollbar: false;
+    cycle: true;
+    layout: vertical;
+}
+element {
+    padding: 10px;
+    spacing: 10px;
+    border-radius: 7px;
+    children: [ element-icon, element-text ];
+}
+element normal.normal, element alternate.normal { background-color: transparent; }
+element selected.normal { background-color: @panel; text-color: @accent; }
+element-icon { size: 26px; }
+element-text { vertical-align: 0.5; text-color: inherit; }
+textbox {
+    str: "Type to search  ·  ↑↓ navigate  ·  Enter open  ·  Esc close";
+    text-color: @muted;
+    font: "JetBrainsMono Nerd Font 9";
+    horizontal-align: 0.5;
+}

@@ -1,29 +1,13 @@
 #!/bin/bash
-
-# Power menu using wofi
-# Make sure wofi is installed: sudo pacman -S wofi
-
-# Define options
-options="⏻ Shutdown\n⏻ Reboot\n⏸ Suspend\n🔒 Lock\n🚪 Logout"
-
-# Show menu and get choice
-chosen=$(echo -e "$options" | wofi --dmenu --prompt="Power Menu" --width=300 --height=200)
-
-# Execute based on choice
-case $chosen in
-    "⏻ Shutdown")
-        systemctl poweroff
-        ;;
-    "⏻ Reboot")
-        systemctl reboot
-        ;;
-    "⏸ Suspend")
-        systemctl suspend
-        ;;
-    "🔒 Lock")
-        hyprlock
-        ;;
-    "🚪 Logout")
-        hyprctl dispatch exit
-        ;;
+# Power actions in the same themed Rofi panel as app search.
+set -euo pipefail
+choice=$(printf '%s\n' '󰐥  Shutdown' '󰜉  Reboot' '󰤄  Suspend' '󰌾  Lock' '󰍃  Logout' |
+    rofi -config "$HOME/.config/rofi/config.rasi" -dmenu -i -no-custom \
+        -p Power -format i -theme-str 'listview { columns: 1; lines: 5; } entry { placeholder: "Choose an action…"; } textbox { str: "↑↓ navigate · Enter select · Esc cancel"; }') || exit 0
+case "$choice" in
+    0) systemctl poweroff ;;
+    1) systemctl reboot ;;
+    2) systemctl suspend ;;
+    3) hyprlock ;;
+    4) hyprctl dispatch 'hl.dsp.exit()' ;;
 esac

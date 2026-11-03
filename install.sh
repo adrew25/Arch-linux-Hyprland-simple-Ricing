@@ -11,6 +11,7 @@ echo ""
 # Create necessary directories
 echo "Creating directories..."
 mkdir -p ~/.config/{hypr,waybar,ghostty,nvim,gtk-3.0,gtk-4.0}
+mkdir -p ~/.config/rofi
 mkdir -p ~/.local/bin
 mkdir -p ~/Pictures/{wallpapers,screenshots}
 
@@ -33,18 +34,31 @@ echo ""
 
 # Install Hyprland config
 echo "→ Installing Hyprland config..."
-if [ -f hypr/hyprland.conf ]; then
-    cp hypr/hyprland.conf ~/.config/hypr/
+if [ -f hypr/hyprland.lua ]; then
+    if ! [ hypr/hyprland.lua -ef ~/.config/hypr/hyprland.lua ]; then
+        cp hypr/hyprland.lua ~/.config/hypr/
+    fi
     echo "  ✓ Hyprland config installed"
 else
-    echo "  ✗ hypr/hyprland.conf not found!"
+    echo "  ✗ hypr/hyprland.lua not found!"
 fi
+
+# Install the app launcher theme (the local config may link to these files).
+for file in rofi/config.rasi rofi/apps.rasi; do
+    target="$HOME/.config/rofi/${file##*/}"
+    if [ -f "$file" ] && ! [ "$file" -ef "$target" ]; then
+        cp "$file" "$target"
+    fi
+done
 
 # Install Waybar config
 echo "→ Installing Waybar config (dark glass theme)..."
 if [ -f waybar/config ] && [ -f waybar/style.css ]; then
-    cp waybar/config ~/.config/waybar/
-    cp waybar/style.css ~/.config/waybar/
+    for name in config style.css; do
+        if ! [ "waybar/$name" -ef "$HOME/.config/waybar/$name" ]; then
+            cp "waybar/$name" "$HOME/.config/waybar/$name"
+        fi
+    done
     echo "  ✓ Waybar config installed"
 else
     echo "  ✗ Waybar configs not found!"
@@ -101,6 +115,24 @@ if [ -d scripts ]; then
     fi
 else
     echo "  ⚠ scripts/ directory not found (skipping)"
+fi
+
+# Install Omarchy palette data, then generate the shared color files.
+mkdir -p ~/.config/desktop-theme/palettes
+for file in themes/omarchy/*.json; do
+    target="$HOME/.config/desktop-theme/palettes/${file##*/}"
+    if [ -f "$file" ] && ! [ "$file" -ef "$target" ]; then cp "$file" "$target"; fi
+done
+mkdir -p ~/.config/desktop-theme/custom
+if [ -d themes/omarchy-custom ]; then
+    cp themes/omarchy-custom/*.json ~/.config/desktop-theme/custom/ 2>/dev/null || true
+fi
+if [ ! -f ~/.config/desktop-theme/current.json ]; then
+    selected_theme=catppuccin
+    if [ -f themes/desktop-current.json ]; then
+        selected_theme=$(/usr/bin/python3 -c 'import json; print(json.load(open("themes/desktop-current.json"))["name"])')
+    fi
+    ~/.local/bin/desktop-theme.py --apply "$selected_theme" --no-reload
 fi
 
 # Install theme configs
@@ -172,7 +204,7 @@ echo "3. Test keybindings:"
 echo "   Super + Space    - App launcher (wofi)"
 echo "   Super + Return   - Terminal (ghostty)"
 echo "   Super + B        - Wallpaper switcher"
-echo "   Super + S        - Screenshot (area)"
+echo "   Super + Shift + S - Screenshot (area)"
 echo ""
 echo "4. Optional: Logout to see SDDM theme"
 echo ""

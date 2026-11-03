@@ -7,23 +7,23 @@ Personal configuration files for Arch Linux with Hyprland - **minimal, modern, a
 ## 🎨 Setup Overview
 
 - **WM**: Hyprland with smooth animations
-- **Bar**: Waybar with dark glass theme
+- **Bar**: Minimal Waybar with volume slider
 - **Terminal**: Ghostty with transparency
-- **Launcher**: wofi
+- **Launcher**: Rofi app search and icon grid
 - **File Manager**: Thunar
-- **Theme**: Catppuccin Mocha
+- **Theme**: Gruvbox by default, with six switchable Omarchy palettes
 - **Font**: JetBrainsMono Nerd Font
-- **Wallpapers**: Dynamic switching with swww
+- **Wallpapers**: Dynamic switching with awww
 
 ## ✨ Features
 
-- 🌑 **Dark glass aesthetic** - Semi-transparent modules with blur effects
+- 🌑 **Minimal desktop bar** - Compact layout with useful system status
 - 🎨 **Dynamic wallpapers** - Smooth transitions with keyboard shortcuts
-- 💎 **Modern pill-shaped modules** - Color-coded waybar modules
+- 💎 **App search and browsing** - Fuzzy search, app icons and a grid view
 - 🔄 **Persistent wallpapers** - Automatically restore on login
-- 📊 **System monitoring** - RAM, disk, network stats with real-time updates
+- 📊 **System monitoring** - CPU, RAM, network and volume slider
 - ⌨️ **Greek/English keyboard** - Easy switching with Alt+Shift
-- 🎭 **Catppuccin Mocha** - Consistent theming across all apps
+- 🎭 **Shared theme palettes** - Coordinated bar, launcher, window borders and terminal
 
 ## 📦 Installation
 
@@ -38,38 +38,21 @@ cd ~/dotfiles
 
 ```bash
 # Core packages
-sudo pacman -S hyprland waybar ghostty wofi wlogout swww \
+sudo pacman -S hyprland waybar ghostty rofi wofi wlogout awww \
                wireplumber pamixer networkmanager nm-connection-editor \
                ttf-jetbrains-mono-nerd pavucontrol thunar \
-               hyprlock polkit-gnome
+               hyprlock brightnessctl polkit-gnome python btop playerctl
 
-# AUR packages (if using yay)
-yay -S swww
+# Screenshot helper (AUR, if using yay)
+yay -S grimblast-git
 ```
 
 ### 3. Install dotfiles
 
 ```bash
-# Backup existing configs (recommended)
-mkdir -p ~/.config-backup-$(date +%Y%m%d)
-cp -r ~/.config/{hypr,waybar,ghostty} ~/.config-backup-$(date +%Y%m%d)/ 2>/dev/null || true
-
-# Install configs
-cp hypr/hyprland.conf ~/.config/hypr/
-cp waybar/config ~/.config/waybar/
-cp waybar/style.css ~/.config/waybar/
-cp ghostty/config ~/.config/ghostty/
-cp -r nvim/* ~/.config/nvim/ 2>/dev/null || true
-
-# Install scripts
-mkdir -p ~/.local/bin
-cp scripts/* ~/.local/bin/
-chmod +x ~/.local/bin/*
-
-# Install theme configs
-cp themes/mimeapps.list ~/.config/
-cp themes/gtk3-settings.ini ~/.config/gtk-3.0/settings.ini
-cp themes/gtk4-settings.ini ~/.config/gtk-4.0/settings.ini
+# Installs configs, launcher scripts and palettes, and creates backups.
+# Optional SDDM theme installation is prompted separately.
+./install.sh
 ```
 
 ### 4. Add wallpapers
@@ -89,6 +72,35 @@ hyprctl reload
 # Or logout and login again
 ```
 
+## Hyprland 0.57 recovery (November 2026)
+
+The active configuration is now `hypr/hyprland.lua`. The `.conf` is retained as a legacy reference; Hyprland 0.57 uses Lua. This migration preserves the newer local HDMI mapping, EN/GR keyboard toggle, Catppuccin borders, gaps, animations, audio startup, and the personal shortcuts (the unused Super + M shortcut was subsequently removed).
+
+Validate before installing or reloading:
+
+```bash
+Hyprland --verify-config -c "$HOME/dotfiles/hypr/hyprland.lua"
+hyprctl reload
+hyprctl configerrors
+```
+
+`install.sh` installs the Lua config; `update.sh` saves it back to the repository. Wallpaper scripts use `awww`, the installed successor to `swww`. On the restored machine, `hyprlock` and `brightnessctl` are missing: install them with `sudo pacman -S hyprlock brightnessctl`. Hyprlock also needs a personal `~/.config/hypr/hyprlock.conf` before the lock shortcut can work.
+
+Additional recovered shortcuts:
+
+| Keys | Action |
+| --- | --- |
+| Super + Shift + S / A / D | Screenshot area / active window / all screens; save and copy |
+| Super + Shift + F | Fullscreen (Super + F maximizes) |
+| Super + grave | Toggle scratchpad `magic` |
+| Super + Shift + grave | Move window to scratchpad |
+| Alt + Tab | Wofi window picker (existing command retained) |
+| Super + arrows | Focus window in that direction |
+| Super + 0 / Shift + 0 | Workspace 10 / move window there |
+| Super + left / right mouse drag | Move / resize window |
+
+Suggested next improvements: configure a working lock screen and idle locking; replace the Wofi window picker if your Wofi build lacks that mode. The theme-selector scripts now open the shared Rofi theme picker.
+
 ## 🎮 Key Bindings
 
 ### General
@@ -97,7 +109,7 @@ hyprctl reload
 | ------------------- | ----------------------- |
 | `Super + Return`    | Terminal (ghostty)      |
 | `Super + E`         | File Manager (Thunar)   |
-| `Super + Space`     | App Launcher (wofi)     |
+| `Super + Space`     | App Launcher (Rofi)     |
 | `Super + X`         | Power Menu              |
 | `Super + Shift + L` | Lock Screen             |
 | `Alt + Shift`       | Switch Keyboard (EN/GR) |
@@ -115,7 +127,7 @@ hyprctl reload
 | ----------- | --------------- |
 | `Super + W` | Close window    |
 | `Super + V` | Toggle floating |
-| `Super + F` | Fullscreen      |
+| `Super + F` | Maximize      |
 | `Super + C` | Center window   |
 | `Super + P` | Pseudo-tile     |
 | `Super + J` | Toggle split    |
@@ -132,7 +144,7 @@ hyprctl reload
 ```
 .
 ├── hypr/                      # Hyprland configuration
-│   └── hyprland.conf         # Main config with wallpaper support
+│   └── hyprland.lua          # Active Hyprland 0.57+ Lua config
 ├── waybar/                    # Waybar configuration
 │   ├── config                # Module configuration
 │   └── style.css             # Dark glass theme
@@ -274,7 +286,7 @@ hyprlock polkit-gnome
 ### AUR
 
 ```bash
-swww  # Wallpaper daemon
+awww  # Wallpaper daemon
 ```
 
 ## 🐛 Troubleshooting
@@ -290,14 +302,14 @@ killall waybar && waybar &
 ### Wallpapers not working
 
 ```bash
-# Check swww is running
-pgrep swww-daemon
+# Check awww is running
+pgrep awww-daemon
 
 # Start it manually
-swww-daemon &
+awww-daemon &
 
 # Test wallpaper
-swww img ~/Pictures/wallpapers/yourimage.jpg
+awww img ~/Pictures/wallpapers/yourimage.jpg
 ```
 
 ## 🙏 Credits
@@ -314,3 +326,27 @@ Feel free to use and modify these dotfiles for your own setup!
 ---
 
 **Enjoy your minimal and beautiful Hyprland rice! 🚀**
+
+## Minimal bar and app launcher
+
+Super + Space opens a centered Rofi app palette with fuzzy search, icons and launch history. Open it without typing to browse installed apps. Super + Alt + Space opens a larger four-column icon grid. Clicking the Arch icon in the bar opens search; right-clicking opens the grid. Required package: `rofi` (2.x with native Wayland support). This is an Omarchy-inspired appearance using Waybar/Rofi; Omarchy 4 itself uses its own Quickshell desktop.
+
+The 32px bar shows workspaces, the active window, date/time, CPU/RAM, EN/GR layout, network, volume with a slider, keep-awake toggle, tray and power. Click CPU/RAM for btop, network for connections, audio for sound settings; right-click audio to mute. Scroll over audio to adjust volume. Click EN/GR to switch layouts. Hover for detailed status.
+
+Sources: `waybar/config`, `waybar/style.css`, `rofi/config.rasi`, `rofi/apps.rasi`, `scripts/app-launcher.sh`. Local launcher config links to this repository.
+
+Mattermost launch shortcuts, wrappers and package-list entries have been removed. Local app data was moved into the desktop recovery backup. To uninstall the system package from a normal terminal: `sudo pacman -Rns mattermost-desktop`. A local hidden desktop entry excludes it from launchers until uninstall.
+
+Apply changes from a Hyprland terminal: `~/.local/bin/reload-desktop.sh`. The script reloads Hyprland, restarts Waybar, and saves the bar log in `~/.local/state/desktop/waybar.log`.
+
+## Omarchy palettes and reliable bar startup
+
+`Super + Ctrl + T` opens the theme picker (also middle-click the Arch icon). Six official Omarchy palettes are bundled: Catppuccin, Tokyo Night, Osaka Jade, Kanagawa, Gruvbox and Matte Black. The picker updates Waybar, Rofi, Hyprland borders and Ghostty together. These are adapted color palettes; Omarchy 4's full Quickshell desktop, GTK themes, wallpapers, and editor integrations are separate.
+
+Use `~/.local/bin/desktop-theme.py --list`, `--apply tokyo-night`, or `--import /path/to/colors.toml --name custom-name`. Imported themes stay in `~/.config/desktop-theme/custom/`; generated files and the selected theme live in `~/.config/desktop-theme/`. Ghostty reloads colors after selection. Theme sources and upstream license are under `themes/omarchy/`.
+
+Waybar now starts both on login and on config reload if it is missing, with a lock to prevent duplicate starts. `~/.local/bin/reload-desktop.sh` restarts it even if the Hyprland reload fails, waits for startup, and reports errors from `~/.local/state/desktop/waybar.log`. The bar explicitly uses native Wayland. Run this reload command in a terminal in your desktop if changes have not appeared yet.
+
+The saved theme in `themes/desktop-current.json` is Gruvbox. Fresh installations restore it automatically.
+
+Wallpaper selection (`Super + B`) and power actions (`Super + X`) use the same Rofi theme as the app launcher. Wallpaper entries show image thumbnails; all menus follow the selected Omarchy palette.

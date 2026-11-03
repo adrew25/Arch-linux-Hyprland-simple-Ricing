@@ -1,40 +1,33 @@
 #!/bin/bash
-
-# Wallpaper Switcher for Hyprland using swww
-# Shows wallpapers in wofi and applies with smooth transitions
-
-WALLPAPER_DIR="$HOME/Pictures/wallpapers"
-
-# Check if swww daemon is running
-if ! pgrep -x swww-daemon > /dev/null; then
-    swww-daemon &
-    sleep 1
+# Wallpaper picker using the same Rofi palette as app search.
+set -euo pipefail
+wallpaper_dir="$HOME/Pictures/wallpapers"
+mkdir -p "$wallpaper_dir"
+mapfile -d '' -t wallpapers < <(find "$wallpaper_dir" -maxdepth 1 -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' -o -iname '*.gif' \) -print0 | sort -z)
+if (( ${#wallpapers[@]} == 0 )); then
+    notify-send 'No wallpapers' 'Add images to ~/Pictures/wallpapers/'
+    exit 0
 fi
-
-# Create wallpaper directory if it doesn't exist
-mkdir -p "$WALLPAPER_DIR"
-
-# Check if there are wallpapers
-if [ -z "$(ls -A $WALLPAPER_DIR/*.{jpg,jpeg,png,webp} 2>/dev/null)" ]; then
-    notify-send "No Wallpapers" "Add wallpapers to ~/Pictures/wallpapers/" -u critical
-    exit 1
+# Select by index, so filenames are never interpreted as shell commands.
+choice=$(
+    for wallpaper in "${wallpapers[@]}"; do
+        printf '%s\0icon\x1f%s\n' "${wallpaper##*/}" "$wallpaper"
+    done | rofi -config "$HOME/.config/rofi/config.rasi" -dmenu -i -no-custom \
+        -p Wallpaper -format i -show-icons \
+        -theme-str 'entry { placeholder: "Search wallpapers…"; } textbox { str: "↑↓ navigate · Enter apply · Esc cancel"; }'
+) || exit 0
+[[ "$choice" =~ ^[0-9]+$ ]] || exit 0
+(( choice < ${#wallpapers[@]} )) || exit 0
+wallpaper="${wallpapers[choice]}"
+if ! awww query > /dev/null 2>&1; then
+    awww-daemon > /dev/null 2>&1 &
+    for attempt in {1..20}; do
+        awww query > /dev/null 2>&1 && break
+        sleep 0.1
+    done
 fi
-
-# Get list of wallpapers and show in wofi
-cd "$WALLPAPER_DIR" || exit 1
-WALLPAPER=$(ls *.{jpg,jpeg,png,webp} 2>/dev/null | wofi --dmenu --prompt "Select Wallpaper" --width 600 --height 400)
-
-if [ -n "$WALLPAPER" ]; then
-    # Apply wallpaper with smooth transition
-    swww img "$WALLPAPER_DIR/$WALLPAPER" \
-        --transition-type wipe \
-        --transition-duration 2 \
-        --transition-fps 60 \
-        --transition-angle 30
-    
-    # Save current wallpaper for persistence
-    echo "$WALLPAPER_DIR/$WALLPAPER" > ~/.cache/current_wallpaper
-    
-    # Send notification
-    notify-send "Wallpaper Changed" "$WALLPAPER" -i "$WALLPAPER_DIR/$WALLPAPER" -t 3000
-fi
+awww img "$wallpaper" --transition-type wipe --transition-duration 2 --transition-fps 60 --transition-angle 30
+cache_dir="${XDG_CACHE_HOME:-$HOME/.cache}"
+mkdir -p "$cache_dir"
+printf '%s\n' "$wallpaper" > "$cache_dir/current_wallpaper"
+notify-send 'Wallpaper changed' "${wallpaper##*/}" -i "$wallpaper" -t 3000

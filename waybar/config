@@ -1,31 +1,41 @@
 {
     "layer": "top",
     "position": "top",
+    "height": 32,
     "spacing": 0,
-    "height": 42,
+    "reload_style_on_change": true,
     "modules-left": [
         "custom/launcher",
-        "hyprland/workspaces"
+        "hyprland/workspaces",
+        "hyprland/window"
     ],
     "modules-center": [
         "clock"
     ],
     "modules-right": [
-        "tray",
-        "disk",
+        "cpu",
         "memory",
+        "hyprland/language",
         "network",
-        "wireplumber",
+        "pulseaudio",
+        "pulseaudio/slider",
+        "idle_inhibitor",
+        "tray",
         "custom/power"
     ],
+    "custom/launcher": {
+        "format": "󰣇",
+        "tooltip": true,
+        "tooltip-format": "Apps · Super + Space\nRight click: browse apps\nMiddle click: themes",
+        "on-click": "~/.local/bin/app-launcher.sh",
+        "on-click-right": "~/.local/bin/app-launcher.sh browse",
+        "on-click-middle": "~/.local/bin/desktop-theme.py"
+    },
     "hyprland/workspaces": {
-        "on-click": "activate",
         "format": "{name}",
-        "format-icons": {
-            "default": "",
-            "active": "",
-            "urgent": ""
-        },
+        "on-click": "activate",
+        "all-outputs": false,
+        "sort-by-number": true,
         "persistent-workspaces": {
             "1": [],
             "2": [],
@@ -34,66 +44,83 @@
             "5": []
         }
     },
-    "memory": {
-        "interval": 5,
-        "format": " {}%",
-        "max-length": 10,
-        "tooltip": true,
-        "tooltip-format": "RAM: {used:0.1f}GB / {total:0.1f}GB ({percentage}%)"
-    },
-    "disk": {
-        "interval": 30,
-        "format": " {percentage_used}%",
-        "path": "/",
-        "tooltip": true,
-        "tooltip-format": "Disk: {used} / {total} ({percentage_used}%)\nAvailable: {free}"
-    },
-    "tray": {
-        "spacing": 10
+    "hyprland/window": {
+        "format": "{title}",
+        "max-length": 30,
+        "separate-outputs": true,
+        "tooltip": false
     },
     "clock": {
-        "interval": 1,
-        "format": "{:%d %H:%M}",
-        "format-alt": "{:%A, %B %d, %Y  %H:%M:%S}",
-        "tooltip-format": "<tt><small>{calendar}</small></tt>",
-        "calendar": {
-            "mode": "month",
-            "on-scroll": 1,
-            "format": {
-                "months": "<span color='#a6e3a1'><b>{}</b></span>",
-                "days": "<span color='#cdd6f4'>{}</span>",
-                "today": "<span color='#f38ba8'><b>{}</b></span>"
-            }
-        }
+        "interval": 30,
+        "format": "{:%a %d %b  %H:%M}",
+        "format-alt": "{:%Y-%m-%d  %H:%M}",
+        "tooltip-format": "<tt><small>{calendar}</small></tt>"
+    },
+    "cpu": {
+        "interval": 5,
+        "format": "󰍛 {usage}%",
+        "tooltip-format": "CPU: {usage}%\nLoad: {load}\nClick for system monitor",
+        "on-click": "ghostty -e btop"
+    },
+    "memory": {
+        "interval": 5,
+        "format": "󰘚 {percentage}%",
+        "tooltip-format": "Memory: {used:0.1f} / {total:0.1f} GiB\nAvailable: {avail:0.1f} GiB",
+        "on-click": "ghostty -e btop"
+    },
+    "hyprland/language": {
+        "format": "{}",
+        "format-en": "EN",
+        "format-el": "GR",
+        "tooltip": false,
+        "on-click": "hyprctl switchxkblayout all next"
     },
     "network": {
-        "interval": 1,
-        "format-wifi": " {bandwidthDownBytes}  {bandwidthUpBytes}",
-        "format-ethernet": "󰈀 {bandwidthDownBytes}  {bandwidthUpBytes}",
-        "format-disconnected": "󰖪 Disconnected",
-        "tooltip-format": "{ifname}\n{ipaddr}/{cidr}\nSignal: {signalStrength}%",
-        "tooltip-format-wifi": "{essid} ({signalStrength}%)\n{ipaddr}/{cidr}\nGateway: {gwaddr}",
-        "tooltip-format-ethernet": "{ifname}\n{ipaddr}/{cidr}\nGateway: {gwaddr}",
+        "interval": 5,
+        "format-wifi": "󰤨",
+        "format-ethernet": "󰈀",
+        "format-disconnected": "󰤭",
+        "tooltip-format-wifi": "{essid} · {signalStrength}%\n{ipaddr}\n↓ {bandwidthDownBytes}  ↑ {bandwidthUpBytes}",
+        "tooltip-format-ethernet": "{ifname} · {ipaddr}\n↓ {bandwidthDownBytes}  ↑ {bandwidthUpBytes}",
+        "tooltip-format-disconnected": "Network disconnected",
         "on-click": "nm-connection-editor"
     },
-    "wireplumber": {
+    "pulseaudio": {
         "format": "{icon} {volume}%",
-        "format-muted": " Muted",
-        "format-icons": ["", "", ""],
-        "on-click": "pavucontrol",
-        "on-click-right": "pamixer -t",
+        "format-muted": "󰝟",
+        "format-icons": {
+            "default": [
+                "󰕿",
+                "󰖀",
+                "󰕾"
+            ]
+        },
         "scroll-step": 5,
-        "tooltip": true,
-        "tooltip-format": "Volume: {volume}%"
+        "on-click": "pavucontrol",
+        "on-click-right": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+        "tooltip-format": "{desc}\nClick: audio settings · Right click: mute"
     },
-    "custom/launcher": {
-        "format": "",
-        "on-click": "wofi --show drun",
-        "tooltip": false
+    "pulseaudio/slider": {
+        "min": 0,
+        "max": 100,
+        "orientation": "horizontal"
+    },
+    "idle_inhibitor": {
+        "format": "{icon}",
+        "format-icons": {
+            "activated": "󰅶",
+            "deactivated": "󰾪"
+        },
+        "tooltip-format-activated": "Keep awake: on",
+        "tooltip-format-deactivated": "Keep awake: off"
+    },
+    "tray": {
+        "spacing": 10,
+        "icon-size": 15
     },
     "custom/power": {
-        "format": "",
-        "on-click": "wlogout",
-        "tooltip": false
+        "format": "󰐥",
+        "tooltip-format": "Power menu · Super + X",
+        "on-click": "~/.local/bin/power-menu.sh"
     }
 }

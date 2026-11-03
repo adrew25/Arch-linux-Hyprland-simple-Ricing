@@ -4,9 +4,9 @@
 
 WALLPAPER_DIR="$HOME/Pictures/wallpapers"
 
-# Check if swww daemon is running
-if ! pgrep -x swww-daemon > /dev/null; then
-    swww-daemon &
+# Check if awww daemon is running
+if ! pgrep -x awww-daemon > /dev/null; then
+    awww-daemon &
     sleep 1
 fi
 
@@ -18,7 +18,7 @@ if [ -n "$WALLPAPER" ]; then
     TRANSITIONS=("wipe" "wave" "grow" "outer" "random")
     RANDOM_TRANSITION=${TRANSITIONS[$RANDOM % ${#TRANSITIONS[@]}]}
     
-    swww img "$WALLPAPER" \
+    awww img "$WALLPAPER" \
         --transition-type "$RANDOM_TRANSITION" \
         --transition-duration 2 \
         --transition-fps 60

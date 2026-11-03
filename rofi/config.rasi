@@ -1,0 +1,17 @@
+configuration {
+    modi: "drun";
+    font: "JetBrainsMono Nerd Font 12";
+    show-icons: true;
+    icon-theme: "Papirus-Dark";
+    terminal: "ghostty";
+    matching: "fuzzy";
+    sort: true;
+    sorting-method: "fzf";
+    drun-display-format: "{name}";
+    drun-match-fields: "name,generic,exec,categories,keywords";
+    display-drun: "Apps";
+    disable-history: false;
+    click-to-exit: true;
+    scroll-method: 1;
+}
+@theme "apps"
